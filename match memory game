@@ -1,0 +1,60 @@
+pool = 'abcdefghijklmnopqrstuvwxyz'
+pool_list = list(pool)
+chosen_alphabets = sample(pool_list, 10)    
+chosen_alphabets = chosen_alphabets*2
+shuffle(chosen_alphabets)
+# print(chosen_alphabets)
+
+Ans = []
+for i in range(4):
+    Ans.append(chosen_alphabets[-5:])
+    del chosen_alphabets[-5:]
+# pprint(Ans)
+
+#create a 5x4 player template
+player_UI = [['*' for i in range(5)] for i in range(4)]
+# pprint(player_UI)
+
+remaining_list = [j for r in player_UI for j in r]
+
+#gaming process#
+while remaining_list.count("*") != 0:
+    #Display player interface
+    print()
+    for r in range(4):
+        for c in range(5):
+            print(player_UI[r][c], end=" ")
+        print()
+    print()
+    #Ask player for the first selection
+    cord1 = input("Please enter the first position you would like to open by row and column (e.g. 24): ")
+    first_open = Ans[int(cord1[0])-1][int(cord1[-1])-1]
+    player_UI[int(cord1[0])-1][int(cord1[-1])-1] = first_open
+    print()
+    for r in range(4):
+        for c in range(5):
+            print(player_UI[r][c], end=" ")
+        print()
+
+    #ask player for the second selection
+    cord2 = input("Please enter the second position you would like to open by row and column (e.g. 24): ")
+    second_open = Ans[int(cord2[0])-1][int(cord2[-1])-1]
+    player_UI[int(cord2[0])-1][int(cord2[-1])-1] = second_open
+    print()
+    for r in range(4):
+        for c in range(5):
+            print(player_UI[r][c], end=" ")
+        print()
+
+    #check if the two cords are the same
+    if first_open != second_open:
+        player_UI[int(cord1[0])-1][int(cord1[-1])-1] = "*"
+        player_UI[int(cord2[0])-1][int(cord2[-1])-1] = "*"
+        print("The two chosen positions are not the same. Please try again\n")
+
+    else:
+        print("Correct combination. Please proceed to the next selection.\n")
+
+    #check how many remaining * left
+    remaining_list = [j for r in player_UI for j in r]
+print("You won!")
