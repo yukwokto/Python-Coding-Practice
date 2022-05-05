@@ -1,0 +1,21 @@
+'''Q12 The number 1961 reads the same upside-down as right-side up. 
+Print out all the numbers between 1 and 100000 that 
+read the same upside-down as right-side up.'''
+
+for i in range(1,100001):
+    if "2" not in str(i) and "3" not in str(i) and "4" not in str(i) and "5" not in str(i)\
+    and "7" not in str(i):
+        
+        reversalI = list(str(i))
+        reversalI.reverse()
+
+        for j in range(len(reversalI)):
+            if reversalI[j] == "6":
+                reversalI[j] = "9"
+            elif reversalI[j] == "9":
+                reversalI[j] = "6"
+
+        f = "".join(reversalI)
+
+        if f == str(i):
+            print(i)
