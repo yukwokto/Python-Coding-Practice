@@ -1,2 +1,2 @@
-# Python-beginner-exercise/ project
-A collection of python beginner projects 
+# Python-beginner-learning-pathway
+Just to record what I have done 
