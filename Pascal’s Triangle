@@ -1,0 +1,20 @@
+from math import *
+
+def pascal(n,k):
+    pasNum = factorial(n)/((factorial(k)*factorial(abs(n-k))))
+    return int(pasNum)
+
+def Pascal_triangle():
+    n = eval(input("Enter the number of row of the triangle: "))
+
+    for i in range(n):
+        L = []
+        for k in range(i):
+            numb = str(pascal(i,k))
+            L.append(numb)
+        L.append("1")    
+        row = " ".join(L)
+        x = row.center(n*10)
+        print(x)
+
+Pascal_triangle()
