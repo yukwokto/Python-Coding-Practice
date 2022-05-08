@@ -1,0 +1,60 @@
+'''
+Using the card dictionary from earlier in this chapter, create a simple card game that deals
+two players three cards each. The player with the highest card wins. If there is a tie, then
+compare the second highest card and, if necessary, the third highest. If all three cards have
+the same value, then the game is a draw.
+'''
+
+deck = [{'value':i, 'suit':c}
+for c in ['spades', 'clubs', 'hearts', 'diamonds']
+for i in range(2,15)]
+shuffle(deck)
+# print(deck)
+
+player1_hand = []
+for i in range(3):
+    card = choice(deck)
+    player1_hand.append(card)
+    del deck[deck.index(card)]
+
+print("The cards of player 1 is:", player1_hand)
+
+player2_hand = []
+for i in range(3):
+    card = choice(deck)
+    player2_hand.append(card)
+    del deck[deck.index(card)]
+
+print("The cards of player 2 is:",player2_hand)
+
+player1_value = []
+for i in range(len(player1_hand)):
+    player1_value.append(player1_hand[i]["value"])
+
+# print(player1_value)
+
+player2_value = []
+for i in range(len(player2_hand)):
+    player2_value.append(player2_hand[i]["value"])
+
+# print(player2_value)
+
+player1_value.sort()
+player2_value.sort()
+
+if player1_value[2] > player2_value[2]:
+    print("Player 1 won!")
+elif player1_value[2] < player2_value[2]:
+    print("Player 2 won!")
+elif player1_value[2] == player2_value[2]:
+    if player1_value[1] > player2_value[1]:
+        print("Player 1 won!")
+    elif player1_value[1] < player2_value[1]:
+        print("Player 2 won!")
+    elif player1_value[1] == player2_value[1]:
+        if player1_value[0] > player2_value[0]:
+            print("Player 1 won!")
+        elif player1_value[0] < player2_value[0]:
+            print("Player 2 won!")
+        elif player1_value[0] == player2_value[0]:
+            print("Tie")
