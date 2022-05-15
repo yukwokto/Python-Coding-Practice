@@ -1,0 +1,192 @@
+class Patreon():
+
+    def __init__(self, name, libraryNo):
+        self.name = name
+        self.libraryNo = libraryNo
+        self.bookOnHand = {}
+        self.request = {}
+        self.reservedFacility = []
+    #Borrowing a book, each patreon can only borrow maximum 10 books
+    def borrow(self, barcode, bookname):
+        if len(self.bookOnHand) >= 10:
+            print("You do not have enough quota for borrowing.")
+
+        elif len(self.bookOnHand) < 10:
+            self.bookOnHand[barcode] = bookname
+            print("Success. You have borrowed", self.bookOnHand[barcode])
+
+    def bookReturn(self, barcode):
+        print("You are returning the book:", self.bookOnHand[barcode])
+        del self.bookOnHand[barcode]
+        print("Return Completed")
+
+    #each patreon can only request maximum 5 books
+    def requestBook(self, barcode, bookname):
+        if len(self.request) >= 5:
+            print("Not enough quota for request a book.")
+
+        elif len(self.request) < 5:
+            self.request[barcode] = bookname
+            print("Success. You have requested:", self.request[barcode])
+    
+    def reservation(self, facility):
+        self.reservedFacility.append(facility)
+        print("Booked Successfully")
+        
+    def show(self):
+        print()
+        print("<<User Record>>")
+        #check books borrowed
+        if len(self.bookOnHand) > 0:
+            print("1. Book borrowed:", end=" ")
+            for book in self.bookOnHand:
+                print(self.bookOnHand[book], end=" ")
+                print()
+        elif len(self.bookOnHand) == 0:
+            print("1. Book borrowed: None")
+        #check requested books
+        if len(self.request) > 0:
+            print("2. Requested Book:", end=" ")
+            for book in self.request:
+                print(self.request[book], end=" ")
+                print()
+        elif len(self.request) == 0:
+            print("2. No request is made.")
+        #check reservation
+        if len(self.reservedFacility) > 0:
+            print("3. Reserved Facility:", end=" ")
+            for venue in self.reservedFacility:
+                print(venue, end=" ")
+                print()
+        elif len(self.reservedFacility) == 0:
+            print("3. No booking record.")
+  
+class Book():
+    def __init__(self, name, barcode):
+        self.name = name
+        self.barcode = barcode
+        self.inLibrary = True
+
+    def checkOut(self): 
+        if self.inLibrary == True:
+            self.inLibrary = not self.inLibrary
+    
+    def checkIn(self):
+        if self.inLibrary == False:
+            self.inLibrary = not self.inLibrary
+
+class Venue():
+    def __init__(self, facilityType, amount):
+        self.facilityType = facilityType
+        self.amount = amount
+
+    def booking(self):
+        if self.amount > 0:
+            self.amount -= 1
+          
+from Patreon import *
+from Book_Venue import *
+
+class Library():
+    def __init__(self):
+        self.patreonList = {} #{libraryNo: Object}
+        self.bookStoage = {} #{barcode: Object}
+        self.venueList = {} #facility type: Object}
+
+    def venueCreate(self, facilityType, amount):
+        oFacility = Venue(facilityType, amount)
+        self.venueList[facilityType] = oFacility
+
+    def bookCreate(self, name, barcode):
+        oBook = Book(name, barcode)
+        self.bookStoage[barcode] = oBook
+
+    def register(self, name, libraryNo):
+        oPatreon = Patreon(name, libraryNo)
+        self.patreonList[libraryNo] = oPatreon
+
+    def borrowBooks(self):
+        userID = eval(input("Please enter your library ID: "))
+        oPatreon = self.patreonList[userID]
+        book_name = input("Please enter the book name: ")
+        book_barcode = input("Please enter the barcode of the book: ")
+        oPatreon.borrow(book_barcode, book_name)
+        oBook = self.bookStoage[book_barcode]
+        oBook.checkOut()
+
+    def returnBooks(self):
+        userID = eval(input("Please enter your library ID: "))
+        book_barcode = input("Please enter the barcode of the book: ")   
+        oPatreon = self.patreonList[userID]
+        oPatreon.bookReturn(book_barcode)
+        oBook = self.bookStoage[book_barcode]
+        oBook.checkIn()        
+        #availbility of the book do not affect book request
+    def bookRequest(self):
+        userID = eval(input("Please enter your library ID: "))
+        book_name = input("Please enter the book name: ")
+        book_barcode = input("Please enter the barcode of the book: ")
+        oPatreon = self.patreonList[userID]
+        oPatreon.requestBook(book_barcode, book_name)
+    
+    def reserveVenue(self):
+        userID = eval(input("Please enter your library ID: "))
+        bookFacility = input("Please enter the facility you would like to book: ")
+        oPatreon = self.patreonList[userID]
+        oVenue = self.venueList[bookFacility]    
+        if oVenue.amount > 0:
+            oPatreon.reservation(bookFacility)
+        else:
+            print("There is no availability.")
+
+    def checkUsage(self):
+        userID = eval(input("Please enter your library ID: "))
+        oPatreon = self.patreonList[userID]  
+        oPatreon.show()
+  
+  from Library import *
+
+oLibrary = Library()
+
+oLibrary.register("KT", 12345)
+oLibrary.register("Grace", 45678)
+
+oLibrary.bookCreate("Marine Biology", "x11111")
+oLibrary.bookCreate("Plant Biology", "x22222")
+oLibrary.bookCreate("Fungi Biology", "x33333")
+oLibrary.bookCreate("Paleontology", "x44444")
+oLibrary.bookCreate("Virology", "x55555")
+
+oLibrary.venueCreate("study table", 50)
+oLibrary.venueCreate("discussion room", 15)
+oLibrary.venueCreate("AV room", 5)
+
+# print(oLibrary.patreonList)
+while True:
+    print()
+    print("To borrow a book, press b")
+    print("To return a book, press r")
+    print("To request a book, press q")
+    print("To book a facility, press f")
+    print("To check borrowing/ booking history, press c")
+    print("To leave, press l")
+    print()
+
+    action = input("Please enter your instruction: ")
+
+    if action == "b":
+        oLibrary.borrowBooks()
+    elif action == "r":
+        oLibrary.returnBooks()
+    elif action == "q":
+        oLibrary.bookRequest()
+    elif action == "f":
+        oLibrary.reserveVenue()
+    elif action == "c":
+        oLibrary.checkUsage()
+    elif action == "l":
+        break 
+    else:
+        print("Invalid instruction. Please try again.")
+
+print("Thank you for visiting the library.")
